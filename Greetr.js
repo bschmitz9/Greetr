@@ -3,10 +3,10 @@
 // and ready to be reused by anybody.
 (function (global, $){
 
-    var Greetr = function (firstName, lastName, location, language){
+    var Greetr = function (firstName, lastName, language){
         //we return a function constructor to create the new object. This allows the user to not have to always use 
         //the new keyword when calling $G()
-        return new Greetr.init(firstName, lastName, location, language);
+        return new Greetr.init(firstName, lastName, language);
     };
 
     //our Greetr.init constructor has access to this variable because it is in the same lexical environment of the constructor
@@ -39,10 +39,10 @@
     };
 
     var locations = {
-        america: "America",
-        mexico: "Mexico",
-        france: "France",
-        germany: "germany"
+        America: "America",
+        Mexico: "Mexico",
+        France: "France",
+        Germany: "Germany"
     };
 
     //set the prototype of the above object to an empty object, once we set the constructor's prototype equal to this prototype
@@ -138,10 +138,19 @@
 
         },
 
-        //allow the user to enter a location. We set the default location to America if the user does not specify one
-        //from the clien we pass in a html selector and use the html function to display the text on the page.
-        getLocation: function (selector, location){
-            this.location = this.location || location;
+        //this sets a location based on the language the user selects upon sign in.
+        //from the client we pass in a html selector and use the html function to display the text on the page.
+        getLocation: function (selector){
+
+            if(this.language === "english"){
+                this.location = "America";
+            } else if (this.language === 'spanish'){
+                this.location = "Spain";
+            } else if (this.language === 'french'){
+                this.location = "France";
+            } else if (this.language === 'german') {
+                this.location = "Germany";
+            }
 
             $(selector).html("You are in " + this.location);
 
@@ -151,13 +160,12 @@
 
     //we can create this after the above function because Greetr.init won't actually be called until after we invoke
     //the Greetr function above.
-    Greetr.init = function (firstName, lastName, location, language){
+    Greetr.init = function (firstName, lastName, language){
         //setting up the new object, building it for what will be returned by the Greetr function
         var self = this;
         self.firstName = firstName || "";
         self.lastName = lastName || "";
         self.language = language || "english";
-        self.location = location || "america";
 
         //validate the language passed in is valid
         self.validate();

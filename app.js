@@ -8,7 +8,7 @@ var g = G$("brian", "schmitz");
 //I also added log so that we log the activity to the console.
 $('#login').click(function (){
 
-    var greeter = G$("Tom", "Jones", "germany");
+    var greeter = G$("Tom", "Jones");
 
 
     //hide the div after clicking the login button

@@ -3,33 +3,46 @@
 // and ready to be reused by anybody.
 (function (global, $){
 
-    var Greetr = function (firstName, lastName, language){
+    var Greetr = function (firstName, lastName, location, language){
         //we return a function constructor to create the new object. This allows the user to not have to always use 
         //the new keyword when calling $G()
-        return new Greetr.init(firstName, lastName, language);
+        return new Greetr.init(firstName, lastName, location, language);
     };
 
     //our Greetr.init constructor has access to this variable because it is in the same lexical environment of the constructor
     //and will close in on the supportedLanguages to have access to its values even after the IIFE has returnd. But it also
     //keeps it hidden from other developers trying to go in and change these values.
-    var supportedLanguages = ["english", "spanish"];
+    var supportedLanguages = ["english", "spanish", "french", "german"];
 
     //we use objects so that we can refer to the keys by name with greeting['english'] and get the property value.
     //this protects the values from other developers outside of the Greetr framework, I would have to expose it for them
     //not exposed to the outside world until I desire to do so
     var greeting = {
         english: "Hello",
-        spanish: "Hola"
+        spanish: "Hola",
+        french: "Salut",
+        german: "Hallo"
         };
 
     var formalGreeting = {
         english: "Greetings",
-        spanish: "Saludos"
+        spanish: "Saludos",
+        french: "Bonjour",
+        german: "Hallo"
     };
 
     var logMessages = {
         english: "Logged in",
-        spanish: "Inicio sesion"
+        spanish: "Inicio sesion",
+        french: "connecte",
+        german: "eingeloggt"
+    };
+
+    var locations = {
+        america: "America",
+        mexico: "Mexico",
+        france: "France",
+        germany: "germany"
     };
 
     //set the prototype of the above object to an empty object, once we set the constructor's prototype equal to this prototype
@@ -56,7 +69,7 @@
             return formalGreeting[this.language] + " " + this.fullName();
         },
 
-        //logs the approporate diaglog to the counsel depending on if it is formal or not, and we are allowing for chaining 
+        //logs the approporate diaglog to the counsole depending on if it is formal or not, and we are allowing for chaining 
         //by returning this.
         greet: function (formal){
             var message;
@@ -80,6 +93,7 @@
         log: function (){
             if (console){
                 console.log(logMessages[this.language] + ": " + this.fullName());
+                console.log("You are in: " + locations[this.location]);
             }
 
             //makes the object chainable
@@ -122,17 +136,28 @@
             //makes this method chainable
             return this;
 
+        },
+
+        //allow the user to enter a location. We set the default location to America if the user does not specify one
+        //from the clien we pass in a html selector and use the html function to display the text on the page.
+        getLocation: function (selector, location){
+            this.location = this.location || location;
+
+            $(selector).html("You are in " + this.location);
+
+            return this;
         }
     };
 
     //we can create this after the above function because Greetr.init won't actually be called until after we invoke
     //the Greetr function above.
-    Greetr.init = function (firstName, lastName, language){
+    Greetr.init = function (firstName, lastName, location, language){
         //setting up the new object, building it for what will be returned by the Greetr function
         var self = this;
         self.firstName = firstName || "";
         self.lastName = lastName || "";
         self.language = language || "english";
+        self.location = location || "america";
 
         //validate the language passed in is valid
         self.validate();
